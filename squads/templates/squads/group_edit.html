@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+{% extends "_base.html" %}
+{% load crispy_forms_tags %}
+{% load jformat %}
+
+{% load thumbnail %}
+
+
+{% block title %}
+{{ group.name }}
+{% endblock title %}
+
+{% block content %}
+
+
+<section class="p-5">
+  <div class="container">
+    <div class="row text-center g-4">
+      <div class="col-md">
+        {% if is_member and approved_member %}
+        <div class="card bg-white text-dark" style="border-radius: 15px;">
+          <div class="card-body text-center">
+            <div class="h1" mb-3>
+              <i class="bi bi-chat-right-text"></i>
+            </div>
+
+
+          </div>
+        </div>
+        <br>
+        {% endif %}
+        <div class="card bg-white text-dark" style="border-radius: 15px;">
+          <div class="card-body text-center">
+            <form enctype="multipart/form-data" action="" method="POST">
+              <div class="form-outline mb-4">
+                {% csrf_token %}
+
+                <!--  -->
+                <div class="h1 mb-3">
+                  <img src="{{ group.get_picture }}" class="rounded-circle account-img" width="100" height="100" alt="">
+                </div>
+                <div class="file btn btn-white">
+                  تغییر تصویر
+                  <input name="picture" id="id_picture formFileLg" value="{{ group.get_picture }}"
+                    class="form-control form-control-sm" type="file" />
+                </div>
+
+                <!--  -->
+                <div class="wrap-contact100">
+
+                  <p class="card-text">
+                  <div class="wrap-input100">
+                    <span class="label-input100">اسم گروه</span>
+                    <input class="input100" type="text" name="name" value="{{ group.name }}" style="text-align:center;">
+                    <span class="focus-input100"></span>
+                  </div>
+                  <div class="wrap-input100 input100-select">
+                    <span class="label-input100">حداکثر ظرفیت گروه</span>
+                    <select style="text-align:center;" class="form-select" name="capacity" id="inputGroupSelect01">
+                      <option value="">انتخاب کنید</option>
+                      {% if group.capacity == 2 %}
+                      <option selected value="2">2</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      {% endif %}
+                      {% if group.capacity == 5 %}
+                      <option value="2">2</option>
+                      <option selected value="5">5</option>
+                      <option value="10">10</option>
+                      {% endif %}
+                      {% if group.capacity == 10 %}
+                      <option value="2">2</option>
+                      <option value="5">5</option>
+                      <option selected value="10">10</option>
+                      {% endif %}
+                    </select>
+                  </div>
+                  <div name="summary" class="wrap-input100">
+                    <span class="label-input100">توضیحات</span>
+                    <textarea class="input100" name="summary" style="text-align:right;">{{ group.summary }}</textarea>
+                    <span class="focus-input100"></span>
+                  </div>
+                  
+                  {% if is_member and approved_member %}
+                  <p>اعضا:</p>
+                  {% for person in group.members.all %}
+                  <p>
+                    <a href="{% url 'profile_details' person.slug %}">{{person}}</a>
+                  </p>
+                  {% endfor %}
+                  {% endif %}
+                  
+                </p>
+                <div class="wrap-input100 input100-select">
+                  <span class="label-input100">نمایش کامنت‌ها به اعضای غیر عضو</span>
+                  <div class="form-check">
+                    <br>
+                    {% if group.show_comments %}
+                    <label class="switch">
+                      <input name="show_comments" class="form-check-input" type="checkbox" checked>
+                      <span class="slider round"></span>
+                    </label>
+                    {% else %}
+                    <label class="switch">
+                      <input name="show_comments" class="form-check-input" type="checkbox">
+                      <span class="slider round"></span>
+                    </label>
+                    {% endif %}
+
+
+
+                  </div>
+                  </div>
+                  <button class="contact100-form-btn btn-success" style="border-radius: 15px;" type="submit">ثبت تغییرات</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-md">
+        <div class="card bg-white text-dark" style="border-radius: 15px;">
+          <div class="card-body text-center">
+            <div class="container">
+              <div class="row">
+                {% if group.show_comments or is_member and approved_member %}
+                <div class="timeline-centered">
+
+
+                  {% if comments %}
+                  {% for comment in comments %}
+
+                  {% if forloop.counter|divisibleby:2 %}
+                  <article class="timeline-entry left-aligned">
+
+                    <div class="timeline-entry-inner">
+                      <time class="timeline-time"><span>{{ comment.pub_date|jformat:"%H:%M" }}</span>
+                        <span>{{ comment.pub_date|jformat:"%d %B" }}</span></time>
+
+                      <div class="timeline-icon bg-danger">
+                        <img src="{{ comment.author.profile.get_avatar }}" class="rounded-circle" width="40" height="40"
+                          alt="">
+                      </div>
+
+                      <div class="timeline-label">
+                        {% if comment.author.first_name %}
+                        <small><a
+                            href="{% url 'profile_details' comment.author.username %}">{{ comment.author.first_name }}</a></small>
+                        {% else %}
+                        <small><a
+                            href="{% url 'profile_details' comment.author.username %}">{{ comment.author }}</a></small>
+                        {% endif %}
+                        <p>{{ comment.body }}</p>
+                      </div>
+                    </div>
+
+                  </article>
+                  {% else %}
+                  <article class="timeline-entry">
+
+                    <div class="timeline-entry-inner">
+                      <time class="timeline-time"><span>{{ comment.pub_date|jformat:"%H:%M" }}</span>
+                        <span>{{ comment.pub_date|jformat:"%d %B" }}</span></time>
+
+                      <div class="timeline-icon bg-success">
+                        <img src="{{ comment.author.profile.get_avatar }}" class="rounded-circle" width="40" height="40"
+                          alt="">
+                      </div>
+
+                      <div class="timeline-label">
+                        {% if comment.author.first_name %}
+                        <small><a
+                            href="{% url 'profile_details' comment.author.username %}">{{ comment.author.first_name }}</a></small>
+                        {% else %}
+                        <small><a
+                            href="{% url 'profile_details' comment.author.username %}">{{ comment.author }}</a></small>
+                        {% endif %}
+                        <p>{{ comment.body }}</p>
+                      </div>
+                    </div>
+
+                  </article>
+                  {% endif %}
+
+                  {% endfor %}
+
+                  {% else %}
+                  <article class="timeline-entry">
+
+                    <div class="timeline-entry-inner">
+                      <time class="timeline-time"><span></span>
+                        <span></span></time>
+
+                      <div class="timeline-icon bg-success">
+                      </div>
+
+                      <div class="timeline-label">
+                        <p>هنوز گزارشی ارسال نشده</p>
+                      </div>
+                    </div>
+
+                  </article>
+                  {% endif %}
+                  {% else %}
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                  <h1></h1>
+                  <h1><i class="bi bi-file-lock2"></i></h1>
+                  <h1></h1>
+                  <br>
+                  <br>
+                  <br>
+
+
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+    </div>
+  </div>
+</section>
+
+
+{% endblock content %}

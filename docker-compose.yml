@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: python /my_site/manage.py runserver 0.0.0.0:8000
+    environment: 
+      - SECRET_KEY=@%+m675*&^%$$4mif2n#l)(&*%^$$#@KYJH%*^&%$$HF^&$$w7@$$75@!+=t(et!$$j_n2qn0!8a9#-kp!^bzxbcq
+      - DEBUG=1
+    volumes:
+      - .:/my_site
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    links:
+      - db:db
+
+  db:
+    image: postgres:11
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - '5432'
+    environment:
+      - POSTGRES_DB=postgresql
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+volumes:
+  postgres_data:

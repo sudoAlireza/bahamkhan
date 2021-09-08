@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+{% extends "_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container-md col-12">
+  <div class="p-5 p-lg-5 pt-lg-5 text-center text-sm-start">
+  <div class="row d-flex justify-content-center align-items-center h-100">
+    <div class="col-xl-9">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+        {% endif %}
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <h1 style="text-align: center;" class="text-dark mb-4">ایجاد گروه جدید</h1>
+
+  <div class="card" style="border-radius: 15px;">
+    <div class="card-body">
+
+      <div class="row align-items-center pt-4 pb-3">
+        <div class="col-md-3 ps-5">
+
+          <h6 for="id_username" class="mb-0">اسم گروه</h6>
+
+        </div>
+        <div class="col-md-9 pe-5">
+
+          <input type="text" id="id_username" name="name" class="form-control form-control-lg"/>
+
+        </div>
+      </div>
+
+      <hr class="mx-n3">
+
+      <div class="row align-items-center py-3">
+        <div class="col-md-3 ps-5">
+
+          <h6 for="id_eng_title" class="mb-0">اسم انگلیسی گروه</h6>
+
+        </div>
+        <div class="col-md-9 pe-5">
+
+          <input id="id_eng_title" name="eng_title" type="text" class="form-control form-control-lg" placeholder="مثلا: masnavi group" />
+
+        </div>
+      </div>
+
+      <hr class="mx-n3">
+
+      <div class="row align-items-center py-3">
+        <div class="col-md-3 ps-5">
+
+          <h6 for="id_summary" class="mb-0">توضیحات گروه</h6>
+
+        </div>
+        <div class="col-md-9 pe-5">
+
+          <textarea id="id_summary" name="summary" class="form-control" rows="3" placeholder="یه توضیحاتی درباره اهداف گروه و منابع مطالعه و هرچیزی که به ذهنتون می‌رسه بنویسید"></textarea>
+
+        </div>
+      </div>
+
+      <hr class="mx-n3">
+
+      <div class="row align-items-center py-3">
+        <div class="col-md-3 ps-5">
+
+          <h6 for="capacity" class="mb-0">حداکثر ظرفیت گروه</h6>
+
+        </div>
+        <div class="col-md-9 pe-5">
+
+          <select id="id_capacity" name="capacity" class="form-control" rows="3" placeholder="کلیک کنید">
+              <option value=""></option>
+              <option value="2">2</option>
+              <option value="5">5</option>
+              <option value="10">10</option>
+          </select>
+
+        </div>
+      </div>
+
+      <hr class="mx-n3">
+
+      <div class="row align-items-center py-3">
+        <div class="col-md-3 ps-5">
+
+          <h6 for="id_picture" class="mb-0">عکس گروه</h6>
+
+        </div>
+        <div class="col-md-9 pe-5">
+
+          <input name="picture" id="id_picture formFileLg" class="form-control form-control-lg" type="file" />
+        </div>
+      </div>
+
+      <hr class="mx-n3">
+
+
+      <div class="px-5 py-4">
+        <button type="submit" class="btn btn-primary btn-lg">ایجاد گروه</button>
+      </div>
+
+    </div>
+  </div>
+</form>
+
+    </div>
+  </div>
+</div>
+</div>
+{% endblock content %}

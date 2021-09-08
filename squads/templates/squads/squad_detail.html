@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+{% extends "_base.html" %}
+{% load crispy_forms_tags %}
+{% load jformat %}
+
+{% load thumbnail %}
+
+
+{% block title %}
+ {{ group.name }}
+{% endblock title %}
+
+{% block content %}
+
+<!-- <h1>approved: {{ approved_member }}</h1>
+
+<h1>is member: {{ is_member }}</h1> -->
+
+
+<style>
+  .people-nearby .google-maps{
+  background: #f8f8f8;
+  border-radius: 4px;
+  border: 1px solid #f1f2f2;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.people-nearby .google-maps .map{
+  height: 300px;
+  width: 100%;
+  border: none;
+}
+
+.people-nearby .nearby-user{
+  padding: 20px 0;
+  border-top: 1px solid #f1f2f2;
+  border-bottom: 1px solid #f1f2f2;
+  margin-bottom: 20px;
+}
+
+img.profile-photo-lg{
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+}
+</style>
+
+
+<section class="p-5">
+  <div class="container">
+    <div class="row text-center g-4">
+      <div class="col-md">
+        {% if is_member and approved_member %}
+        <div class="card bg-white text-dark" style="border-radius: 15px;">
+
+          <div class="card-body text-center">
+            <div class="h1" mb-3>
+              <i class="bi bi-chat-right-text"></i>
+            </div>
+            <form method="post" action="{% url 'comment-create' group.slug %}" style="border-radius: 15px; margin-top: 1.3em;">
+              {% csrf_token %}
+              <p><label for="id_body"></label>
+                <textarea class="form-control-sm" type="text" name="body" style="border-radius: 15px;" id="id_body" placeholder="متن گزارشتون رو اینجا بنویسید" required></textarea>
+              </p>
+              <button type="submit" class="btn btn-success btn-md"><i class="bi bi-reply"></i> ثبت </button>
+            </form>
+
+          </div>
+        </div>
+        <br>
+        {% endif %}
+        <!-- Start -->
+        <div class="d-flex align-items-center">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">اطلاعات</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">اعضای گروه</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">درخواست‌های عضویت
+              <span class="badge bg-danger">{{unapproved_requests|length}}</span>
+            </button>
+          </li>
+
+        </ul>
+      </div>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="card bg-white text-dark">
+              <div class="card-body text-center">
+                <div class="h1 mb-3">
+                  <img src="{{ group.get_picture }}" class="rounded-circle account-img" width="100" height="100" alt="">
+                </div>
+                <h3 class="card-title mb-3">
+                  {{ group.name }}
+                  <h5 class="mb-3">
+                    تعداد اعضای کنونی گروه: {{approved_requests|length}}
+                  </h5>
+                  <h5 class="mb-3">
+                    ظرفیت کلی گروه: {{group.capacity}}
+                  </h5>
+
+                </h3>
+                <p class="card-text mb-3">
+                  {{ group.summary }}
+                  </p>
+                
+                {% if is_creator %}
+                <a href="{% url 'group_edit' group.slug %}" style="border-radius: 15px;" class="btn btn-success">ویرایش گروه</a>
+                <a href="{% url 'leave-group' group.slug %}" style="border-radius: 15px;" onclick="return confirm('از حذف گروه مطمئنید؟')" class="btn btn-danger">خروج و حذف گروه</a>
+                {% endif %}
+                {% if is_member and approved_member and is_creator == False %}
+                <a href="{% url 'leave-group' group.slug %}" style="border-radius: 15px;" onclick="return confirm('از خروج خود مطمئنید؟')" class="btn btn-danger">خروج از گروه</a>
+                {% endif %}
+                {% if is_member == True and approved_member == False %}
+                <a href="{% url 'leave-group' group.slug %}" style="border-radius: 15px;" class="btn btn-secondary">لغو درخواست</a>
+                {% endif %}
+                {% if is_member == False and approved_member == False %}
+                <a href="{% url 'join-group' group.slug %}" style="border-radius: 15px;" class="btn btn-success">عضویت در گروه</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="card bg-white text-dark" style="border-radius: 15px;">
+              <div class="card-body text-center">
+                <div class="h1" mb-3>
+                  <i class="bi bi-chat-right-text"></i>
+                </div>
+                <h1>اعضا</h1>
+<!-- Start User List -->
+<div class="container">
+  <div class="row">
+          <div class="people-nearby">
+            
+            {% for person in approved_requests %}
+            
+            <div class="nearby-user">
+              <div class="row">
+                <div class="col-md-2 col-sm-2">
+                  <img src="{{ person.get_avatar }}" alt="user" class="profile-photo-lg">
+                </div>
+                <div class="col-md-7 col-sm-7">
+                  <h5><a href="{% url 'profile_details' person.slug %}" class="profile-link">{{ person.user.first_name }}</a></h5>
+                  <p>{{ person.user.username }}</p>
+                </div>
+                <div class="col-md-1 col-sm-1">
+                  {% if is_creator %}
+                    
+                  <a class="btn btn-danger" onclick="return confirm('از حذف این کاربر مطمئنید؟')" href="{% url 'reject' slug=group.slug user_slug=person.slug %}">حذف</a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            {% endfor %}
+
+          </div>
+</div>
+</div>
+                
+    <!-- End User List -->
+
+
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+            <div class="card bg-white text-dark" style="border-radius: 15px;">
+              <div class="card-body text-center">
+                <div class="h1" mb-3>
+                  <i class="bi bi-chat-right-text"></i>
+                </div>
+                <h3 class="mb-4">درخواست‌های عضویت:</h3>
+                <!-- Start User List -->
+  <div class="row">
+          <div class="people-nearby">
+            
+            {% for request in unapproved_requests %}
+            
+            <div class="nearby-user">
+              <div class="row">
+                <div class="col-md-2 col-sm-2">
+                  <img src="{{ request.members.get_avatar }}" alt="user" class="profile-photo-lg">
+                </div>
+                <div class="col-md-7 col-sm-7">
+                  <h5><a href="{% url 'profile_details' request.members.slug %}" class="profile-link">{{ request.members.user.first_name }}</a></h5>
+                  <p>{{ request.members }}</p>
+                </div>
+                <div class="col-md-1 col-sm-1">
+                  {% if is_creator %}
+                    
+                  <a class="btn btn-danger" style="border-radius: 15px;" onclick="return confirm('از حذف این کاربر مطمئنید؟')" href="{% url 'reject' slug=group.slug user_slug=request.members.slug %}"><i class="bi bi-x-circle-fill"></i></a>
+                  <a class="btn btn-success" style="border-radius: 15px;" onclick="return confirm('از تایید این کاربر مطمئنید؟')" href="{% url 'approve' slug=group.slug user_slug=request.members.slug %}"><i class="bi bi-check-circle-fill"></i></a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            {% endfor %}
+
+          </div>
+</div>
+    <!-- End User List -->
+
+    
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End -->
+      </div>
+      <div class="col-md">
+
+        {% if not is_member and not approved_member %}
+        <br>
+        <br>
+        {% endif %}
+        {% if is_member and not approved_member %}
+        <br>
+        <br>
+        {% endif %}
+
+        <div class="card bg-white text-dark" style="border-radius: 15px;">
+          <div class="card-body text-center">
+            <div class="container">
+              <div class="row">
+                {% if group.show_comments or is_member and approved_member %}
+                <div class="timeline-centered">
+
+
+                  {% if comments %}
+                  {% for comment in comments %}
+
+                  {% if forloop.counter|divisibleby:2 %}
+                  <article class="timeline-entry left-aligned">
+
+                    <div class="timeline-entry-inner">
+                      <time class="timeline-time"><span>{{ comment.pub_date|jformat:"%H:%M" }}</span>
+                        <span>{{ comment.pub_date|jformat:"%d %B" }}</span></time>
+
+                      <div class="timeline-icon bg-danger">
+                        <img src="{{ comment.author.profile.get_avatar }}" class="rounded-circle" width="40" height="40"
+                          alt="">
+                      </div>
+
+                      <div class="timeline-label">
+                        {% if comment.author.first_name %}
+                        <small><a
+                            href="{% url 'profile_details' comment.author.username %}">{{ comment.author.first_name }}</a></small>
+                        {% else %}
+                        <small><a
+                            href="{% url 'profile_details' comment.author.username %}">{{ comment.author }}</a></small>
+                        {% endif %}
+                        <p>{{ comment.body }}</p>
+                      </div>
+                    </div>
+
+                  </article>
+                  {% else %}
+                  <article class="timeline-entry">
+
+                    <div class="timeline-entry-inner">
+                      <time class="timeline-time"><span>{{ comment.pub_date|jformat:"%H:%M" }}</span>
+                        <span>{{ comment.pub_date|jformat:"%d %B" }}</span></time>
+
+                      <div class="timeline-icon bg-success">
+                        <img src="{{ comment.author.profile.get_avatar }}" class="rounded-circle" width="40" height="40"
+                          alt="">
+                      </div>
+
+                      <div class="timeline-label">
+                        {% if comment.author.first_name %}
+                        <small><a
+                            href="{% url 'profile_details' comment.author.username %}">{{ comment.author.first_name }}</a></small>
+                        {% else %}
+                        <small><a
+                            href="{% url 'profile_details' comment.author.username %}">{{ comment.author }}</a></small>
+                        {% endif %}
+                        <p>{{ comment.body }}</p>
+                      </div>
+                    </div>
+
+                  </article>
+                  {% endif %}
+
+                  {% endfor %}
+
+                  {% else %}
+                  <article class="timeline-entry">
+
+                    <div class="timeline-entry-inner">
+                      <time class="timeline-time"><span></span>
+                        <span></span></time>
+
+                      <div class="timeline-icon bg-success">
+                      </div>
+
+                      <div class="timeline-label">
+                        <p>هنوز گزارشی ارسال نشده</p>
+                      </div>
+                    </div>
+
+                  </article>
+                  {% endif %}
+                  {% else %}
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                  <h1></h1>
+                  <h1><i class="bi bi-file-lock2"></i></h1>
+                  <h1></h1>
+                  <br>
+                  <br>
+                  <br>
+
+
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!--  -->
+
+
+<!--  -->
+{% endblock content %}

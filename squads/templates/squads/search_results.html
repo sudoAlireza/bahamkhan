@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+{% extends "_base.html" %}
+
+{% block content %}
+<div class="container-md col-6">
+    <div class="p-5 p-lg-5 pt-lg-5 text-center text-sm-start">
+        <form class="form-inline mt-2 mt-md-0" action="{% url 'search_results' %}" method="GET">
+            <input name="q" class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+          </form>
+          <h2>نتایج جست‌وجو:</h2>
+          <div class="container-md col-12">
+          {% for group in search_results %}
+          <div class="container">
+            <div class="card mt-5 border-5 pt-2 active pb-0 px-3">
+                <div class="card-body ">
+                    <div class="row">
+                        <div class="col-12 ">
+                    <img src="{{ group.get_picture }}" alt="DP" class=" rounded-circle img-fluid " width="35" height="35">
+                    <h4 class="card-title "><b><a href="{{ group.get_absolute_url }}" class="nav-link text-dark">{{group.name}}</a></b></h4>
+                        </div>
+                        <div class="col">
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                <p class="card-text text-muted small "><span class="vl mr-2 ml-0"></span> ساخته شده به دست <span class="font-weight-bold"> {{ group.creator }}</span> در تاریخ {{ group.date_created }}</p>
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white px-0 ">
+                    <div class="row">
+                        <div class=" col-md-auto "><a href="{{ group.get_absolute_url }}" class="btn btn-outlined btn-black text-muted "><img src="https://img.icons8.com/metro/26/000000/more.png" width="20" height="20" class="mr-2 more"><small>بیشتر</small></a> <span class="vl ml-3"></span> </div>
+                        <div class="col-md-auto ">
+                            <ul class="list-inline">
+                                {% for profile in group.members.all %}
+                                <li class="list-inline-item"> <img src="{{ profile.get_avatar }}" alt="DP" class=" rounded-circle img-fluid " width="35" height="35"> </li>
+                                  
+                                {% endfor %}
+                                <!-- <li class="list-inline-item"> <img src="https://img.icons8.com/ios/50/000000/plus.png" width="30" height="30 " class="more"> </li> -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+          {% endfor %}
+            <p>پیدا نشد؟ گروه خودتونو بسازید: <a href="{% url 'new_group' %}">ساخت گروه جدید</a></p>
+    </div>
+</div>
+</div>
+{% endblock content %}
+
