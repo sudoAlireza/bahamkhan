@@ -153,16 +153,16 @@ img.profile-photo-lg{
             <div class="nearby-user">
               <div class="row">
                 <div class="col-md-2 col-sm-2">
-                  <img src="{{ person.get_avatar }}" alt="user" class="profile-photo-lg">
+                  <img src="{{ person.members.get_avatar }}" alt="user" class="profile-photo-lg">
                 </div>
                 <div class="col-md-7 col-sm-7">
-                  <h5><a href="{% url 'profile_details' person.slug %}" class="profile-link">{{ person.user.first_name }}</a></h5>
-                  <p>{{ person.user.username }}</p>
+                  <h5><a href="{% url 'profile_details' person.members.slug %}" class="profile-link">{{ person.members.user.first_name }}</a></h5>
+                  <p>{{ person.members.user.username }}</p>
                 </div>
                 <div class="col-md-1 col-sm-1">
                   {% if is_creator %}
                     
-                  <a class="btn btn-danger" onclick="return confirm('از حذف این کاربر مطمئنید؟')" href="{% url 'reject' slug=group.slug user_slug=person.slug %}">حذف</a>
+                  <a class="btn btn-danger" onclick="return confirm('از حذف این کاربر مطمئنید؟')" href="{% url 'reject' slug=group.slug user_slug=person.members.slug %}">حذف</a>
                   {% endif %}
                 </div>
               </div>
@@ -205,8 +205,8 @@ img.profile-photo-lg{
                 <div class="col-md-1 col-sm-1">
                   {% if is_creator %}
                     
-                  <a class="btn btn-danger" style="border-radius: 15px;" onclick="return confirm('از حذف این کاربر مطمئنید؟')" href="{% url 'reject' slug=group.slug user_slug=request.members.slug %}"><i class="bi bi-x-circle-fill"></i></a>
                   <a class="btn btn-success" style="border-radius: 15px;" onclick="return confirm('از تایید این کاربر مطمئنید؟')" href="{% url 'approve' slug=group.slug user_slug=request.members.slug %}"><i class="bi bi-check-circle-fill"></i></a>
+                  <a class="btn btn-danger" style="border-radius: 15px;" onclick="return confirm('از حذف این کاربر مطمئنید؟')" href="{% url 'reject' slug=group.slug user_slug=request.members.slug %}"><i class="bi bi-x-circle-fill"></i></a>
                   {% endif %}
                 </div>
               </div>

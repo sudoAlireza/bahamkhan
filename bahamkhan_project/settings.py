@@ -16,7 +16,7 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = True
+DEBUG = False
 
 os.environ['wsgi.url_scheme'] = 'https'
 
@@ -30,7 +30,7 @@ HTTPS = 'on'
 if DEBUG:
     SECRET_KEY = os.environ.get('SECRET_KEY')
 else:
-    SECRET_KEY = '@%+m675*&^%$$4mif2n#l)(&*%^$$#@KYJH%*^&%$$HF^&$$w7@$$75@!+=t(et!$$j_n2qn0!8a9#-kp!^bzxbcq'
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = int(os.environ.get('DEBUG', default=1))
@@ -127,10 +127,10 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'bahamkhan',
-            'USER': 'postgres',
-            'PASSWORD': 'thisishardpassword',
-            'HOST': 'newdb-bhk',
+            'NAME': os.environ.get('PostgreSQL_Name', 'local_name'),
+            'USER': os.environ.get('PostgreSQL_User', 'local_user'),
+            'PASSWORD': os.environ.get('PostgreSQL_Password', 'local_pass'),
+            'HOST': os.environ.get('PostgreSQL_Host', 'local_host'),
         }
     }
 
@@ -245,16 +245,19 @@ ACCOUNT_USERNAME_REQUIRED = False
 # ACCOUNT_FORMS = {'signup': 'users.forms.CustomUserCreationForm'}
 # ACCOUNT_EMAIL_VERIFICATION = 'none'
 
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'bahamkhan.ir@gmail.com'
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'bahamkhan.ir@gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_PASSWORD = '-12F^Gh409767gfTs74%3A1626'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_HOST_USER = os.environ.get('EMAIL_HOST', 'email'),
+    EMAIL_USE_TLS = True
+    DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_FROM', 'email_from'),
+    EMAIL_PORT = 587
+    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', 'password'),
 
 
 USE_X_FORWARDED_HOST = True

@@ -46,13 +46,9 @@ class ApproveView(GroupCreatorRequiredMixin, DetailView):
     def get(self, request, slug, user_slug):
         group = Squad.objects.get(slug=slug)
         that_user = group.members.get(slug = user_slug)
-        all_members = group.members.all()
+        # all_members = group.members.all()
         m1 = Membership.objects.get(group=group, members=that_user)
-        count = 0
-        for member in all_members:
-            member_check = Membership.objects.get(group=group, members=member)
-            if member_check.is_approved:
-                count += 1
+        count = group.membership_set.filter(is_approved=True).count()
         if count < group.capacity:
             m1.is_approved = True
             m1.save()
@@ -86,18 +82,17 @@ class GroupDetailView(DetailView):
     def get(self, request, slug):
         this_user = self.request.user
         group = Squad.objects.get(slug = slug)
-        all_queries = group.members.all()
+        all_members = group.members.all()
         comments = group.comment_set.all()
-        members_list = []
         comment_form = CommentForm()
-        for member in all_queries:
-            members_list.append(member.user)
 
-        members_list_by_profile = []
-        for member in all_queries:
-            members_list_by_profile.append(member)
+        members_list = list(all_members)
+
+        # for member in all_queries:
+        #     members_list.append(member.user)
+
+        # members_list_by_profile = list(all_members)
         
-
         try:
             approved_member = this_user.profile.membership_set.get(group=group).is_approved
         except:
@@ -109,21 +104,23 @@ class GroupDetailView(DetailView):
 
 
         is_member = False
-        if this_user in members_list:
-            is_member = True
+        if this_user.is_authenticated:
+            if this_user.profile in members_list:
+                is_member = True
 
         is_creator = this_user == group.creator
 
-        unapproved_requests = []
-        for any_member in members_list_by_profile:
-            if not any_member.membership_set.get(group=group).is_approved:
-                unapproved_requests.append(any_member.membership_set.get(group=group))
+        unapproved_requests = list(group.membership_set.filter(is_approved=False))
+        # for any_member in members_list_by_profile:
+        #     if not any_member.membership_set.get(group=group).is_approved:
+        #         unapproved_requests.append(any_member.membership_set.get(group=group))
 
-        approved_requests = []
-        for member in all_queries:
-            member_check = Membership.objects.get(group=group, members=member)
-            if member_check.is_approved:
-                approved_requests.append(member)
+        approved_requests = list(group.membership_set.filter(is_approved=True))
+
+        # for member in all_members:
+        #     member_check = Membership.objects.get(group=group, members=member)
+        #     if member_check.is_approved:
+        #         approved_requests.append(member)
 
         context = {
         'comment_form': comment_form,
