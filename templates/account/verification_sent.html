@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+{% extends "_base.html" %}
+{% load crispy_forms_tags %}
+{% load socialaccount %}
+{% load i18n %}
+
+{% block title %}{% trans "Verify Your E-mail Address" %}{% endblock %}
+
+
+{% block content %}
+<div class="row row-cols-1 row-col-1">
+  <div id="logreg-forms">
+    <br><h1>{% trans "Verify Your E-mail Address" %}</h1>
+
+    <p>{% blocktrans %}We have sent an e-mail to you for verification. Follow the link provided to finalize the signup process. Please contact us if you do not receive it within a few minutes.{% endblocktrans %}</p>
+<br>
+</div>
+</div>
+{% endblock content %}

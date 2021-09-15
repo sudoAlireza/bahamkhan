@@ -16,6 +16,10 @@ from django.views.generic import DetailView
 from squads.models import Squad, Comment, Membership
 from profiles.models import Profile
 
+
+from django.core.mail import EmailMessage, send_mail
+
+
 from .forms import CommentForm, GroupForm
 from .mixins import (
     MembershipRequiredMixin,
@@ -52,6 +56,15 @@ class ApproveView(GroupCreatorRequiredMixin, DetailView):
         if count < group.capacity:
             m1.is_approved = True
             m1.save()
+            email_subject = f'درخواست عضویت شما در گروه باهم‌خوانی {group.name} پذیرفته شد'
+            email_body = f'درخواست عضویت شما در گروه {group.name} پذیرفته شده \n https://bahamkhan.ir'
+            email = EmailMessage(
+                email_subject,
+                email_body,
+                'bahamkhan.ir@gmail.com',
+                (that_user.user.email,),
+            )
+        email.send(fail_silently=False)
         return HttpResponseRedirect(f'/groups/{slug}')
 
 
@@ -127,6 +140,7 @@ class GroupDetailView(DetailView):
 
 
 class CommentCreateView(LoginRequiredMixin, MembershipRequiredMixin, View):
+    login_url = '/accounts/login/' 
     def post(self, request, slug):
         group = get_object_or_404(Squad, slug=slug)
         comment = Comment(body=request.POST['body'], author= request.user, group=group)
@@ -134,7 +148,7 @@ class CommentCreateView(LoginRequiredMixin, MembershipRequiredMixin, View):
         return redirect(reverse('group-detail', args=[slug]))
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='/accounts/login/')
 def join_group(request, slug):
     group = Squad.objects.get(slug=slug)
     profile = Profile.objects.get(user=request.user.id)
@@ -146,10 +160,20 @@ def join_group(request, slug):
     else:
         membershiping = Membership.objects.create(members=profile, group=group)
         membershiping.save()
+        email_subject = 'درخواست عضویت در گروه باهم‌خوان شما'
+        email_body = f'کاربر {profile.user} درخواست عضویت در گروه {group.name} شما را دارد \n https://bahamkhan.ir'
+        email = EmailMessage(
+            email_subject,
+            email_body,
+            'bahamkhan.ir@gmail.com',
+            (group.creator.email,),
+        )
+        email.send(fail_silently=False)
+            
     return HttpResponseRedirect(f'/groups/{slug}')
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='/accounts/login/')
 def leave_group(request, slug):
     group = Squad.objects.get(slug=slug)
     profile = Profile.objects.get(user=request.user.id)
@@ -167,7 +191,7 @@ def leave_group(request, slug):
 class CreateGroupView(LoginRequiredMixin ,CreateView):
     template_name = 'squads/new_group.html'
     model = Squad
-    login_url = '/login/'
+    login_url = '/accounts/login/'
     # form_class = GroupForm
     redirect_field_name = 'redirect_to'
     def post(self, request):

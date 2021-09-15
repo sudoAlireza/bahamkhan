@@ -6,7 +6,6 @@ services:
     command: python /my_site/manage.py runserver 0.0.0.0:8000
     environment: 
       - SECRET_KEY=@%+m675*&^%$$4mif2n#l)(&*%^$$#@KYJH%*^&%$$HF^&$$w7@$$75@!+=t(et!$$j_n2qn0!8a9#-kp!^bzxbcq
-      - DEBUG=1
     volumes:
       - .:/my_site
     ports:

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+{% extends "blog/blog_base.html" %}
+{% load jformat %}
+
+
+{% block blogtitle %}
+    وبلاگ
+{% endblock blogtitle %}
+
+
+
+{% block article %}
+
+<br><br>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+{% if page_obj %}
+{% for post in page_obj %}
+
+
+
+    <div class="col">
+      <div class="card h-100">
+        <img src="{{ post.get_picture }}" class="card-img-top" alt="{{ post.title }}">
+        <div class="card-body">
+          <h5 class="card-title"><a href="{% url 'post-details' post.slug %}"><h2 class="post-title">{{ post.title }}</h2></a></h5>
+          <p class="card-text">{{ post.content | truncatewords:30|safe }}</p>
+        </div>
+      </div>
+    </div>
+    
+    {% endfor %}
+    {% endif %}
+</div>
+  
+  
+  <br>
+  <!-- Paginator -->
+  <nav class="blog-pagination align-self-center" aria-label="Pagination">
+      {% if not page_obj.has_next %}
+              <a class="btn btn-outline-secondary disabled" href="#" tabindex="-1" aria-disabled="true">قدیمی‌تر</a>
+              <a class="btn btn-outline-primary" href="?page={{ page_obj.previous_page_number }}"> جدیدتر </a>
+      {% elif not page_obj.has_previous %}
+       <a class="btn btn-outline-primary" href="?page={{ page_obj.next_page_number }}" > قدیمی‌تر </a>
+       <a class="btn btn-outline-secondary disabled" href="#" tabindex="-1" aria-disabled="true">جدیدتر</a>
+      {% elif page_obj.has_previous and page_obj.has_next %}
+        <a class="btn btn-outline-primary" href="?page={{ page_obj.next_page_number }}" > قدیمی‌تر </a>
+        <a class="btn btn-outline-primary" href="?page={{ page_obj.previous_page_number }}"> جدیدتر </a>
+      {% endif %}   
+      </nav>
+      <br><br>
+{% endblock article %}

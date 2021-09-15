@@ -2,19 +2,44 @@
 {% load static %}
 
 
-<html lang="ar" dir="rtl">
+<html lang="fa" dir="rtl">
     <head>
+         <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-KRVF6WL');</script>
+        <!-- End Google Tag Manager -->
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block metatags %}
+
+    {% endblock metatags %}
+    <link rel="apple-touch-icon" sizes="57x57" href="{% static 'favicon/apple-icon-57x57.png' %}">
+    <link rel="apple-touch-icon" sizes="60x60" href="{% static 'favicon/apple-icon-60x60.png' %}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'favicon/apple-icon-72x72.png' %}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{% static 'favicon/apple-icon-76x76.png' %}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'favicon/apple-icon-114x114.png' %}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{% static 'favicon/apple-icon-120x120.png' %}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{% static 'favicon/apple-icon-144x144.png' %}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{% static 'favicon/apple-icon-152x152.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/apple-icon-180x180.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192"  href="{% static 'favicon/android-icon-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{% static 'favicon/favicon-96x96.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'favicon/manifest.json' %}">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="{% static 'favicon/ms-icon-144x144.png' %}">
+    <meta name="theme-color" content="#ffffff">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.rtl.min.css" integrity="sha384-gXt9imSW0VcJVHezoNQsP+TNrjYXoGcrqBZJpry9zJt8PCQjobwmhMGaDHTASo9N" crossorigin="anonymous">
+        <!-- <link href="https://fonts.googleapis.com/css?family=Amiri:wght@400;700&amp;display=swap" rel="stylesheet"> -->
+        <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> -->
         <link rel="stylesheet" href="{% static 'css/main.css' %}">
         <link rel="stylesheet" href="{% static 'css/utils.css' %}">
         <link rel="stylesheet" href="{% static 'css/group-edit-form.css' %}">
-        <link href="https://fonts.googleapis.com/css?family=Amiri:wght@400;700&amp;display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-        
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
         <style>
             body::before {
                 display: block;
@@ -44,12 +69,16 @@
         <title>{% block title %}صفحه اول{% endblock title %} - باهم‌خوان</title>
     </head>
     <body>
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KRVF6WL"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 fixed-top" dir="rtl">
             <div class="container">
                 <a href="{% url 'home' %}" class="navbar-brand">باهم‌خوان</a>
                 <a href="{% url 'group_list' %}" class="nav-link text-secondary">گروه‌ها</a>
-                <a href="#" class="nav-link text-secondary">وبلاگ</a>
+                <a href="{% url 'blog_home' %}" class="nav-link text-secondary">وبلاگ</a>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
                     <span class="navbar-toggler-icon"></span>
@@ -65,14 +94,14 @@
                             <a href="{% url 'profile_details' user.username %}" class="nav-link">پروفایل</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'logout' %}" class="nav-link">خروج از اکانت</a>
+                            <a href="{% url 'account_logout' %}" class="nav-link">خروج از اکانت</a>
                         </li>
                         {% else %}
                         <li class="nav-item">
-                            <a href="{% url 'login' %}" class="nav-link">ورود به اکانت</a>
+                            <a href="{% url 'account_login' %}" class="nav-link">ورود به اکانت</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'signup' %}" class="nav-link">ایجاد اکانت</a>
+                            <a href="{% url 'account_signup' %}" class="nav-link">ایجاد اکانت</a>
                         </li>
                         {% endif %}
                     </ul>
@@ -81,6 +110,20 @@
         </nav>
 
 {% block content %}{% endblock content %}
+
+<!-- Footer -->
+<footer class="p-5 bg-dark text-white text-center position-relative">
+    <div class="container">
+        <p class="lead">
+            کپی‌رایت &copy; <a href="https://github.com/alireza-f">باهم‌خوان</a>
+        </p>
+        <a href="" class="position-absolute bottom-0 end-0 p-5">
+            <i class="bi bi-arrow-up-circle h1"></i>
+        </a>
+    </div>
+</footer>
+
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
     </body>

@@ -22,7 +22,7 @@ from django.conf import settings
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('this-is-for-admin/', admin.site.urls),
 
 
     # custom app auth
@@ -30,11 +30,14 @@ urlpatterns = [
 
     #django's app
     # path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('allauth.urls')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
 
 
     #apps
     path('', include('pages.urls')),
     path('', include('profiles.urls')),
     path('', include('squads.urls')),
+    path('blog/', include('blog.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) #images

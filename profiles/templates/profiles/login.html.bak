@@ -6,13 +6,7 @@
 {% endblock title %}
 
 {% block content %}
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-{{ message.tags }}">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
+
 
 <div class="container-md col-4">
   <div id="logreg-forms">

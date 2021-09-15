@@ -16,18 +16,29 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+DEBUG = True
+
+os.environ['wsgi.url_scheme'] = 'https'
+
+HTTPS = 'on'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+
+if DEBUG:
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+else:
+    SECRET_KEY = '@%+m675*&^%$$4mif2n#l)(&*%^$$#@KYJH%*^&%$$HF^&$$w7@$$75@!+=t(et!$$j_n2qn0!8a9#-kp!^bzxbcq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.environ.get('DEBUG', default=1))
+# DEBUG = int(os.environ.get('DEBUG', default=1))
 
-ALLOWED_HOSTS = []
-
+if DEBUG:
+    ALLOWED_HOSTS = []
+else:
+    ALLOWED_HOSTS = ['bahamkhan-alireza715.fandogh.cloud','bahamkhan.ir', '127.0.0.1']
 
 # Application definition
 
@@ -38,20 +49,27 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-
-    # 'django.contrib.sites',
+    'django.contrib.sites',
 
     # third party
     'crispy_forms',
     'django_jalali',
     'easy_thumbnails',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.twitter',
+    'ckeditor',
+    'ckeditor_uploader',
 
-    #apps
+
+    #local apps
     'users.apps.UsersConfig',
     'pages.apps.PagesConfig',
     'profiles.apps.ProfilesConfig',
     'squads.apps.SquadsConfig',
+    'blog.apps.BlogConfig',
 
 ]
 
@@ -81,6 +99,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'blog.context_processors.sections_processor',
             ],
         },
     },
@@ -92,16 +111,32 @@ WSGI_APPLICATION = 'bahamkhan_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
-        'PORT' : 5432
+
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
+            'HOST': 'db',
+            'PORT' : 5432
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'bahamkhan',
+            'USER': 'postgres',
+            'PASSWORD': 'thisishardpassword',
+            'HOST': 'newdb-bhk',
+        }
+    }
+
+
+
+
 
 
 
@@ -165,6 +200,8 @@ ACCOUNT_LOGOUT_REDIRECT = 'home'
 #Pillow media
 MEDIA_URL = '/media/' # new
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
 
 
 LANGUAGE_CODE = 'fa-ir'
@@ -176,3 +213,59 @@ THUMBNAIL_ALIASES = {
         'avatar': {'size': (50, 50), 'crop': True},
     },
 }
+
+
+# django-allauth config
+
+if DEBUG:
+    SITE_ID = 7
+else:
+    SITE_ID = 10
+
+
+# ACCOUNT_SIGNUP_FORM_CLASS = 'users.forms.CustomUserCreationForm'
+# ACCOUNT_USERNAME_VALIDATORS = ('users.validators.CustomUsernameValidator',)
+
+
+    
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+ACCOUNT_SESSION_REMEMBER = True
+
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+
+ACCOUNT_USERNAME_REQUIRED = False
+
+# ACCOUNT_FORMS = {'signup': 'users.forms.CustomUserCreationForm'}
+# ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'bahamkhan.ir@gmail.com'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'bahamkhan.ir@gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_PASSWORD = '-12F^Gh409767gfTs74%3A1626'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+if not DEBUG:
+    SECURE_BROWSER_XSS_FILTER = True
+    X_FRAME_OPTIONS = 'DENY'
+    # SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 3600
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SESSION_COOKIE_SECURE = True # new
+    CSRF_COOKIE_SECURE = True # new

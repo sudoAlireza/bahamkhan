@@ -22,6 +22,6 @@ urlpatterns = [
     path('groups/<slug:slug>/comment/', CommentCreateView.as_view(), name='comment-create'),
     path('groups/<slug:slug>/update', GroupUpdateView.as_view(), name='group_edit'),
     path('search/', SearchResultListView.as_view(), name='search_results'),
-    path('groups/<slug:slug>/<slug:user_slug>/approve/', ApproveView.as_view(), name='approve'),
-    path('groups/<slug:slug>/<slug:user_slug>/reject/', RejectView.as_view(), name='reject')
+    path('groups/<slug:slug>/<str:user_slug>/approve/', ApproveView.as_view(), name='approve'),
+    path('groups/<slug:slug>/<str:user_slug>/reject/', RejectView.as_view(), name='reject')
 ]

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+{% extends '_base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Log Out{% endblock %}
+{% block content %}
+
+
+<div class="row row-cols-1 row-col-1">
+        
+        <div id="logreg-forms">
+        <form class="form-signin" action="" method="POST">
+          {% csrf_token %}
+            <br><h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> خروج از حساب کاربری</h1>
+            <p>قصد خروج و بیرون آمدن از اکانت خود را دارید؟</p>
+
+            <button class="btn btn-danger" type="submit">بله</button>
+        <a class="" href="{% url 'home' %}">منصرف شدم، بازگشت به صفحه اول</a>
+      
+          </form>
+            <br>
+                  
+      </div>
+      </div>
+{% endblock content %}

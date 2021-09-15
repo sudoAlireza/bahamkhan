@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+{% extends "_base.html" %}
+{% load jformat %}
+
+
+
+{% block title %}
+  {% block blogtitle %}
+    
+  {% endblock blogtitle %}
+{% endblock title %}
+
+{% block content %}
+<div class="container pb50">
+    <div class="row">
+        <div class="col-md-9 mb40">
+            {% block article %}
+              
+            {% endblock article %}
+            <!-- post article-->
+
+        </div>
+        <div class="col-md-3 mb40">
+            <div class="mb40">
+
+            </div>
+            <!--/col-->
+            <div class="p-4">
+                <h4 class="">فهرست موضوعات</h4>
+                <br>
+                <ol class="list-unstyled mb-0">
+              {% for category in categories %}
+            <li><a href="{% url 'category-posts' category.eng_title %}" style="text-decoration:none">{{ category.title }}</a></li>
+            {% endfor categories %}
+            </ol>
+              </div> 
+            <!--/col-->
+            <div class="p-4">
+                <h4 class="">آخرین مطالب</h4>
+                <br>
+                <ol class="list-unstyled mb-0">
+                    {% if last_three_posts %}
+                    {% for last_post in last_three_posts %}
+            <li><a href="{% url 'post-details' last_post.slug %}" style="text-decoration:none">{{ last_post.title }}</a></li>
+            {% endfor %}
+            {% endif %}
+            </ol>
+              </div> 
+
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

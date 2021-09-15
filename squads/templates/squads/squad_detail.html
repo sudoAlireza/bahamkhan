@@ -11,6 +11,17 @@
  {{ group.name }}
 {% endblock title %}
 
+
+{% block metatags %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="{{group.name}}">
+    <meta name="description" property="og:description" content="{{group.summary|striptags|truncatewords:20}}">
+    <meta property="og:image" content="{{group.get_picture}}">
+    <meta property="og:image:alt" content="{{ group.name }}">
+    <meta property="og:url" content="{{ group.get_absolute_url }}">
+    <meta name="twitter:card" value="{{group.summary|striptags|truncatewords:20}}">
+{% endblock metatags %}
+
 {% block content %}
 
 <!-- <h1>approved: {{ approved_member }}</h1>
@@ -232,7 +243,7 @@ img.profile-photo-lg{
             <div class="container">
               <div class="row">
                 {% if group.show_comments or is_member and approved_member %}
-                <div class="timeline-centered">
+                <div class="timeline-centered d-none d-lg-block">
 
 
                   {% if comments %}
@@ -323,8 +334,43 @@ img.profile-photo-lg{
 
 
                 </div>
+
                 {% endif %}
               </div>
+              <!-- Mobile View -->
+              {% if group.show_comments or is_member and approved_member %}
+              
+              <div class="row">
+                <div class="d-lg-none d-block">
+                  {% if comments %}
+                  {% for comment in comments %}
+                  <article class="timeline-entry">
+                    <div class="timeline-entry-inner">
+                      <span>{{ comment.author }}</span>
+                        <img src="{{ comment.author.profile.get_avatar }}" class="rounded-circle" width="20" height="20" alt="">
+                      <div class="timeline-label">
+                        <small><time class="timeline-time"><span>{{ comment.pub_date|jformat:"%d %B" }} </span><span>{{ comment.pub_date|jformat:"%H:%M" }}</span>
+                              </time></small>
+                        <p>{{ comment.body }}</p>
+                      </div>
+                    </div>
+                  </article>
+                  <br>
+                {% endfor %}
+                  {% else %}
+                  <article class="timeline-entry">
+                    <div class="timeline-entry-inner">
+                      <div class="timeline-label">
+                        <p>هنوز کامنتی ارسال نشده است</p>
+                      </div>
+                    </div>
+                  </article>
+                  {% endif %}
+                </div>
+              </div>
+
+            {% endif %}
+              <!-- End Mobile View -->
             </div>
           </div>
         </div>

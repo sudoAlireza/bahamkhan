@@ -7,13 +7,7 @@
   <div class="p-5 p-lg-5 pt-lg-5 text-center text-sm-start">
   <div class="row d-flex justify-content-center align-items-center h-100">
     <div class="col-xl-9">
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-{{ message.tags }}">
-            {{ message }}
-          </div>
-        {% endfor %}
-        {% endif %}
+
 
 <form action="" method="POST">
   {% csrf_token %}

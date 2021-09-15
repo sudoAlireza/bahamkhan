@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+{% extends "_base.html" %}
+{% load crispy_forms_tags %}
+{% load socialaccount %}
+{% load i18n %}
+
+{% block title %}
+  ورود
+{% endblock title %}
+
+
+{% block content %}
+<div class="row row-cols-1 row-col-1">
+  
+  <div id="logreg-forms">
+  <form class="form-signin" action="" method="POST">
+    {% csrf_token %}
+    <br><h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> ورود </h1>
+  <br>
+  {% comment %}
+  <a href="{% provider_login_url 'github' %}" class="btn btn-dark btn-outline-secondary" type="button"><span><i class="fab fa-github-alt"></i>ورود با گیتهاب</span> </a>
+  <a href="{% provider_login_url 'twitter' %}" class="btn btn-primary btn-outline-secondary" type="button"><span><i class="fab fa-twitter-alt"></i>ورود با توییتر</span> </a>
+  <br>
+  <p style="text-align:center">یا</p>
+    
+  {% endcomment %}
+      {{ form|crispy }}
+      <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i> ورود</button>
+      <a href="{% url 'account_reset_password' %}" id="forgot_pswd">فراموشی پسورد</a>
+      <hr>
+      <a href="{% url 'account_signup' %}" class="btn btn-primary text-light" type="" id="btn-signup"><i class="fas fa-user-plus"></i> ساخت اکانت جدید</a>
+
+    </form>
+      <br>
+            
+</div>
+</div>
+{% endblock content %}

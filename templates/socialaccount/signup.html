@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% extends "_base.html" %}
+{% load crispy_forms_tags %}
+{% load socialaccount %}
+{% load i18n %}
+
+{% block title %}
+  ورود
+{% endblock title %}
+
+
+{% block content %}
+<div class="container-md col-4">
+  
+  <div id="logreg-forms">
+  <form class="form-signin signup" id="signup_form" method="post" action="{% url 'socialaccount_signup' %}">
+    {% csrf_token %}
+    <h1>{% trans "Sign Up" %}</h1>
+
+    <p>اکانت شما تقریبا ساخته شده، کافیه یه یوزرنیم هم برای خودتون انتخاب کنید و تموم.</p>
+      {{ form|crispy }}
+      {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      {% endif %}
+
+      <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i>تکمیل ثبت نام &raquo;</button>
+
+    </form>
+      <br>
+            
+</div>
+</div>
+{% endblock content %}

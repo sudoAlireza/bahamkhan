@@ -7,13 +7,7 @@
   <div class="p-5 p-lg-5 pt-lg-5 text-center text-sm-start">
   <div class="row d-flex justify-content-center align-items-center h-100">
     <div class="col-xl-9">
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-{{ message.tags }}">
-            {{ message }}
-          </div>
-        {% endfor %}
-        {% endif %}
+      
 
 <form enctype="multipart/form-data" action="" method="POST">
   {% csrf_token %}
@@ -46,7 +40,7 @@
         <div class="col-md-9 pe-5">
 
           <input id="id_eng_title" name="eng_title" type="text" class="form-control form-control-lg" placeholder="مثلا: masnavi group" />
-          <div class="small text-muted mt-2">این قراره آدرس گروهتون باشه. این‌جوری: bahamkhan.ir/group/masnavi-group</div>
+          <div class="small text-muted mt-2">این قراره آدرس گروهتون باشه. این‌جوری: bahamkhan.ir/groups/masnavi-group</div>
 
         </div>
       </div>

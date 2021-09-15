@@ -7,7 +7,13 @@ from easy_thumbnails.fields import ThumbnailerImageField
 
 from django.templatetags.static import static
 
+import uuid
+
+
+
+
 class Profile(models.Model):
+    
     GENDER_MALE = 1
     GENDER_FEMALE = 2
     GENDER_OTHER = 3
@@ -21,7 +27,8 @@ class Profile(models.Model):
         related_name="profile",
         on_delete=models.CASCADE,
         editable=False,
-        verbose_name='نام کاربری'
+        verbose_name='نام کاربری',
+        unique=True
     )
     avatar = ThumbnailerImageField(upload_to="profile_pictures/",
         null=True,
@@ -33,7 +40,7 @@ class Profile(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    slug = models.SlugField(null=True)
+    slug = models.SlugField(null=True, unique=True)
 
     class Meta:
         verbose_name = _('پروفایل')
@@ -44,9 +51,17 @@ class Profile(models.Model):
         return self.user.username
 
 
+    # def save(self, *args, **kwargs):
+    #     url = str(uuid.uuid4())
+    #     if self.user.username.isascii():
+    #         self.slug = slugify(self.user.username)
+    #     elif not self.user.username.isascii():
+    #         self.slug = url
+    #         self.user.username = url
+    #     return super().save(*args, **kwargs)
+
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.user.username)
+        self.slug = self.user.username
         return super().save(*args, **kwargs)
 
 

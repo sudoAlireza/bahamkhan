@@ -8,6 +8,7 @@
 
 
 <div class="container emp-profile">
+
     <div class="row">
         <div class="col-md-4">
             <div class="profile-img">
@@ -57,12 +58,13 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label>ایمیل</label>
+                                            <label>تولد</label>
                                         </div>
                                         <div class="col-md-6">
-                                            <p>{{ profile.user.email }}</p>
+                                            <p>{{ profile.birthday }}</p>
                                         </div>
                                     </div>
+
                         </div>
                     </div>
                 </div>
@@ -70,7 +72,7 @@
         </div>
         {% if profile.user == user %}
         <div class="col-md-2">
-            <a href="{% url 'profile_edit' profile.user %}" class="btn btn-primary">ویرایش پروفایل</a>
+            <a href="{% url 'profile_edit' user.profile.slug %}" class="btn btn-primary">ویرایش پروفایل</a>
         </div>  
         {% endif %}
         

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+{% extends "_base.html" %}
+{% load jformat %}
+
+
+{%block title%} آرشیو سالانه {{ year }} {%endblock title%}
+
+
+{% block content %}
+{% if yearly_archive %}
+
+{% for post in yearly_archive %}
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+
+    <div class="col">
+      <div class="card">
+        <img src="..." class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title"><a href="{% url 'post-details' post.slug %}"><h2 class="post-title">{{ post.title }}</h2></a></h5>
+          <p class="card-text">{{ post.content | truncatewords:30 }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  
+  {% endfor %}
+  
+  {% else %}
+  
+  <h1>متاسفانه برای سال {{ year }} پستی وجود نداره</h1>
+  
+  {% endif %}
+  
+  <!-- Paginator -->
+  <nav class="blog-pagination" aria-label="Pagination">
+      {% if not page_obj.has_next %}
+              <a class="btn btn-outline-secondary disabled" href="#" tabindex="-1" aria-disabled="true">قدیمی‌تر</a>
+              <a class="btn btn-outline-primary" href="?page={{ page_obj.previous_page_number }}"> جدیدتر </a>
+      {% elif not page_obj.has_previous %}
+       <a class="btn btn-outline-primary" href="?page={{ page_obj.next_page_number }}" > قدیمی‌تر </a>
+       <a class="btn btn-outline-secondary disabled" href="#" tabindex="-1" aria-disabled="true">جدیدتر</a>
+      {% elif page_obj.has_previous and page_obj.has_next %}
+        <a class="btn btn-outline-primary" href="?page={{ page_obj.next_page_number }}" > قدیمی‌تر </a>
+        <a class="btn btn-outline-primary" href="?page={{ page_obj.previous_page_number }}"> جدیدتر </a>
+      {% endif %}   
+      </nav>
+{% endblock content %}

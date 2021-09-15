@@ -6,13 +6,17 @@
 {% endblock title %}
 
 {% block content %}
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-{{ message.tags }}">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
+
+{% comment %}
+  
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}">
+  {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endcomment %}
 
 <div class="container-md col-4">
   <div id="logreg-forms">
@@ -21,7 +25,6 @@
       <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> ورود به اکانت</h1>
       <div class="social-login">
           <button class="btn facebook-btn social-btn" type="button"><span><i class="fab fa-facebook-f"></i> ورود با فیسبوک</span> </button>
-          <button class="btn google-btn social-btn" type="button"><span><i class="fab fa-google-plus-g"></i> ورود با گوگل</span> </button>
       </div>
       <p style="text-align:center"> یا  </p>
       {{ form|crispy }}

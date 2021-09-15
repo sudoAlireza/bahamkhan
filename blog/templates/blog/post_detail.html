@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+{% extends "blog/blog_base.html" %}
+{% load crispy_forms_tags %}
+
+{% load jformat %}
+
+
+{% block blogtitle %}
+  {{post.title}}
+{% endblock blogtitle %}
+
+
+
+{% block metatags %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="{{post.title}}">
+    <meta name="description" property="og:description" content="{{post.content|safe|striptags|truncatewords:20}}">
+    <meta property="og:image" content="{{post.get_picture}}">
+    <meta property="og:image:alt" content="{{ post.title }}">
+    <meta property="og:url" content="{{ post.get_absolute_url }}">
+    <meta name="twitter:card" value="{{post.content|safe|striptags|truncatewords:20}}">
+{% endblock metatags %}
+
+
+{% block article %}
+
+<article>
+  <img src="{{ post.get_picture }}" alt="" class="img-fluid mb30">
+  <div class="post-content">
+    <br>
+      <h3>{{ post.title }}</h3>
+      <ul class="post-meta list-inline">
+          <li class="list-inline-item">
+            {% if post.author.first_name %}
+              <i class="fa fa-user-circle-o"></i> <a href="#">{{ post.author.first_name }}</a>
+            {% else %}
+            <i class="fa fa-user-circle-o"></i> <a href="#">{{ post.author }}</a>
+            {% endif %}
+          </li>
+          <li class="list-inline-item">
+              <i class="fa fa-calendar-o"></i> <a href="#">{{ post.created_at|jformat:"%A %d %B %Y" }}</a>
+          </li>
+
+      </ul>
+      <br>
+      {{ post.content|safe }}
+
+      {% comment %}  
+      <!-- <h4 class="mb40 text-uppercase font500">About Author</h4>
+      <div class="media mb40">
+        <i class="d-flex mr-3 fa fa-user-circle fa-5x text-primary"></i>
+        <div class="media-body">
+              <h5 class="mt-0 font700">Jane Doe</h5> Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+          </div>
+      </div> -->
+      {% endcomment %}
+      <hr class="mb40">
+      <h4 class="mb40 text-uppercase font500">نظرات</h4>
+
+<br>
+      {% if comments %}
+    {% for comment in comments %}
+
+
+    <div class="media mb40">
+        <i class="d-flex mr-3 fa fa-user-circle-o fa-3x"></i>
+        <div class="media-body">
+            <small class="mt-0 font400 clearfix">{{ comment.name }} در تاریخ {{ comment.created_at|jformat:"%A %d %B %Y" }}</small>
+            {{ comment.content| linebreaks }}
+        </div>
+    </div>
+<br>
+{% endfor %}
+    {% endif %}
+
+
+      <hr class="mb40">
+      <h4 class="mb40 text-uppercase font500">ارسال نظر</h4>
+      {% if new_comment %}
+    <div class="alert alert-success" role="alert">
+        کامنت شما در انتظار تایید است.
+    </div>
+    {% else %}
+    
+    <form method="post" style="margin-top: 1.3em;">
+    <h5 style="font-family: 'Oswald', sans-serif;">ارسال کامنت</h5>
+        {{ comment_form|crispy }}
+            <br/>
+
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-md">ثبت کامنت</button>
+        <br>
+    </form>
+    <br>
+    {% endif %}
+  </div>
+</article>
+{% endblock article %}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{% extends '_base.html' %}
+{% load i18n %}
+{% load account %}
+{% block title %}{% trans "Confirm E-mail Address" %}{% endblock %}
+{% block content %}
+
+<div class="row row-cols-1 row-col-1">
+        <div id="logreg-forms">
+            <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+                {% csrf_token %}
+            {% if confirmation %}
+            {% user_display confirmation.email_address.user as user_display %}
+            <p>{% blocktrans with confirmation.email_address.email as email %}
+                Please confirm that
+                <a href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for user
+                {{ user_display }}.{% endblocktrans %}
+            </p>
+                <br><h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> {% trans "Confirm E-mail Address" %} </h1>
+                <button class="btn btn-primary" type="submit">{% trans 'Confirm' %}</button>
+                {% else %}
+                {% url 'account_email' as email_url %}
+                <p>{% blocktrans %}This e-mail confirmation link expired or is invalid. Please
+                    <a href="{{ email_url }}">issue a new e-mail confirmation request</a>.
+                    {% endblocktrans %}
+                </p>
+                {% endif %}
+            </form>
+        </div>
+</div>
+{% endblock %}
