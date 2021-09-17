@@ -74,7 +74,7 @@ class Membership(models.Model):
     is_approved = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.members} درخواست عضو در {self.group} را دارد.'
+        return f'عضویت {self.members} در {self.group}'
 
 
     @property

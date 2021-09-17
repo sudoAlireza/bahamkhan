@@ -30,7 +30,7 @@ HTTPS = 'on'
 if DEBUG:
     SECRET_KEY = os.environ.get('SECRET_KEY')
 else:
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'SECRET_KEY')
+    SECRET_KEY = os.environ.get('SECRET_KEY', 's_key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = int(os.environ.get('DEBUG', default=1))
@@ -38,7 +38,7 @@ else:
 if DEBUG:
     ALLOWED_HOSTS = []
 else:
-    ALLOWED_HOSTS = ['bahamkhan-alireza715.fandogh.cloud','bahamkhan.ir', '127.0.0.1']
+    ALLOWED_HOSTS = ['bahamkhan-alireza715.fandogh.cloud','bahamkhan.ir', '127.0.0.1', 'www.bahamkhan.ir']
 
 # Application definition
 
@@ -253,11 +253,11 @@ if DEBUG:
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_HOST_USER = os.environ.get('EMAIL_HOST', 'email'),
+    EMAIL_HOST_USER = os.environ.get('EMAIL_HOST', 'email')
     EMAIL_USE_TLS = True
-    DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_FROM', 'email_from'),
+    DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_FROM', 'email_from')
     EMAIL_PORT = 587
-    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', 'password'),
+    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', 'password')
 
 
 USE_X_FORWARDED_HOST = True
