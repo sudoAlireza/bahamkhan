@@ -111,7 +111,7 @@ env.bak/
 venv.bak/
 .fandoghignore
 *.yml
-
+static/css/util.css
 # Spyder project settings
 .spyderproject
 .spyproject
