@@ -112,6 +112,9 @@ venv.bak/
 .fandoghignore
 *.yml
 static/css/util.css
+static/css/DANA.html
+static/css/DANAwebfonttest.html 
+
 # Spyder project settings
 .spyderproject
 .spyproject
